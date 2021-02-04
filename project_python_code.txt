@@ -1,0 +1,122 @@
+import pymysql
+
+conn=pymysql.connect(
+    user='root',
+    passwd='alswjd1004',
+    host='127.0.0.1',
+    db='accident',
+    charset='utf8'
+)
+
+
+
+def search_Q1():
+    cursor=conn.cursor()
+    sql = '''SELECT WhenDay AS "요일",COUNT(*) AS "사건 수" FROM DATEandTIME GROUP BY WhenDay ORDER BY COUNT(*) DESC   LIMIT 1;'''
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    for res in result:
+        print(res)
+    conn.close()
+
+
+
+def search_Q2():
+    cursor = conn.cursor()
+    sql = '''SELECT COUNT(accidentnum) AS "차vs사람 사건수" FROM	human;'''
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    for res in result:
+        print(res)
+    conn.close()
+
+
+
+def search_Q2_1():
+    cursor = conn.cursor()
+    sql = '''SELECT COUNT(accidentnum) AS "차vs차 사건수" FROM	vehicle;'''
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    for res in result:
+        print(res)
+    conn.close()
+
+def search_Q3():
+    cursor = conn.cursor()
+    sql = 'SELECT Violation AS "가해자 법규 위반 내용", COUNT(*) AS "사망자 수" FROM CAUSE,DAMAGE WHERE (CAUSE.AttCarNum=DAMAGE.AttCarNum) GROUP BY Violation ORDER BY COUNT(*) DESC LIMIT 1;'
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    for res in result:
+        print(res)
+    conn.close()
+
+def search_Q4():
+    cursor = conn.cursor()
+    sql = '''SELECT Violation AS "가해자 법규 위반 내용",  COUNT(*) AS "부상자 수" FROM CAUSE,DAMAGE WHERE (DAMAGE.InjureNum>=1)AND(DAMAGE.accidentnum = CAUSE.accidentnum) GROUP BY Violation ORDER BY COUNT(*) DESC LIMIT 1;'''
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    for res in result:
+        print(res)
+    conn.close()
+
+
+def search_Q5():
+    cursor = conn.cursor()
+    sql = '''SELECT Violation AS "위법내용",COUNT(*) AS "사건 수" FROM CAUSE GROUP BY Violation ORDER BY COUNT(*) DESC LIMIT 3;'''
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    for res in result:
+        print(res)
+    conn.close()
+
+def search_Q6():
+    cursor = conn.cursor()
+    sql = '''SELECT AREA AS "사고 발생 지역", COUNT(*) AS "교통사고 수" FROM PLACE,DAMAGE WHERE (PLACE.AccidentID=DAMAGE.AccidentNum)GROUP BY AREA ORDER BY COUNT(*) DESC LIMIT 1;'''
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    for res in result:
+        print(res)
+    conn.close()
+
+
+def answer():
+            while True:
+                print('질문을 입력해주세요 : ')
+                Q = input()
+
+                if Q == "Q.1" or Q == "어느 요일에 사고가 가장 많이 발생하는가?" or Q == "사고가 많이 발생한 요일은?":
+                    print('***********************')
+                    search_Q1()
+                    print('***********************')
+                elif Q == "차대사람 사고는 총 몇회 발생하는가?":
+                    print('***********************')
+                    search_Q2()
+                    print('***********************')
+                elif Q == "차대차 사고는 총 몇회 발생하는가?":
+                    print('***********************')
+                    search_Q2_1()
+                    print('***********************')
+                elif Q == "Q.3" or Q == "사망자가 가장 많은 사건의 법규 위반 내용은?" or Q == "사망자를 가장 많이 발생시킨 법규 위반 내용은?":
+                    print('***********************')
+                    search_Q3()
+                    print('***********************')
+                elif Q == "Q.4" or Q == "부상자가 가장 많은 사건의 법규 위반 내용은?" or Q == "부상자를 가장 많이 발생시킨 법규 위반 내용은?":
+                    print('***********************')
+                    search_Q4()
+                    print('***********************')
+                elif Q == "Q.5" or Q == "가장 많은 사건을 발생시킨 상위 3개 법규위반내용은 무엇인가?" or Q == "교통사고를 가장 많이 발생시킨 3개의 법규 위반 내용은?":
+                    print('***********************')
+                    search_Q5()
+                    print('***********************')
+                elif Q == "Q.6" or Q == "2019년1월 첫 째주 교통사고는 어느 지역에서 가장 많이 발생했는가?" or Q == "2019년1월 첫 째주 교통사고가 가장 많이 발생한 지역은?":
+                    print('***********************')
+                    search_Q6()
+                    print('***********************')
+
+                elif Q== "quit":
+                    print('***********************')
+                    print("프로그램이 종료되었습니다.")
+                    print('***********************')
+                    break
+
+answer() #질문 프로그램 시작
